@@ -41,11 +41,13 @@ public class SpriteRenderer {
 
   public void nextSprite() {
     spriteIndex++;
+    spriteIndex = moduloClamp(spriteIndex, 2, 14);
     updateSprite();
   }
 
   public void previousSprite() {
     spriteIndex--;
+    spriteIndex = moduloClamp(spriteIndex, 2, 14);
     updateSprite();
   }
 
@@ -55,5 +57,16 @@ public class SpriteRenderer {
         .getScaledInstance(SPRITE_WIDTH * 10, SPRITE_HEIGHT * 10, Image.SCALE_FAST));
     indexLabel.setText("" + spriteIndex);
     panel.repaint();
+  }
+
+  private static int moduloClamp(int number, int minIncl, int maxExcl) {
+    if (minIncl >= maxExcl) {
+      throw new IllegalArgumentException(String.format("Min %d must be strictly less than Max %d", minIncl, maxExcl));
+    }
+
+    int range = maxExcl - minIncl;
+    while (number >= maxExcl) number -= range;
+    while (number < minIncl) number += range;
+    return number;
   }
 }

@@ -23,6 +23,8 @@ public class App {
     createAndShowGUI();
   }
 
+  static boolean auto = false;
+
   @SneakyThrows
   private static void createAndShowGUI() {
     // Create and set up the window.
@@ -49,12 +51,15 @@ public class App {
     frame.setVisible(true);
 
     SpriteRenderer renderer = new SpriteRenderer(panel, anglerImg, anglerImgBuffered, indexLabel);
-    SpriteToolListener listener = new SpriteToolListener(new GlobalContent(frame, renderer));
+    GlobalContent global = new GlobalContent(frame, renderer);
+    SpriteToolListener listener = new SpriteToolListener(global, () -> {App.auto = !auto;});
     frame.addKeyListener(listener);
 
     while (frame.isDisplayable()) {
-      Thread.sleep(Duration.ofMillis(1000 / 10));
-      renderer.nextSprite();
+      if (auto) {
+        Thread.sleep(Duration.ofMillis(1000 / 12));
+        renderer.nextSprite();
+      }
     }
   }
 

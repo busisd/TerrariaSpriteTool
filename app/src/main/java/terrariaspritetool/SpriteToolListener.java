@@ -7,9 +7,11 @@ import terrariaspritetool.App.GlobalContent;
 
 public class SpriteToolListener implements KeyListener {
   private GlobalContent global;
+  private Runnable toggle;
 
-  public SpriteToolListener(GlobalContent global) {
+  public SpriteToolListener(GlobalContent global, Runnable toggle) {
     this.global = global;
+    this.toggle = toggle;
   }
 
   @Override
@@ -20,6 +22,8 @@ public class SpriteToolListener implements KeyListener {
       global.renderer().nextSprite();
     } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
       global.renderer().previousSprite();
+    } else if (e.getKeyCode() == KeyEvent.VK_A) {
+      toggle.run();
     }
   }
 
