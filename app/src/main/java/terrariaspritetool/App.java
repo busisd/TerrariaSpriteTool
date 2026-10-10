@@ -3,20 +3,12 @@
  */
 package terrariaspritetool;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.time.Duration;
 
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import lombok.SneakyThrows;
+import terrariaspritetool.constants.SpriteData;
 
 public class App {
   public static void main(String[] args) {
@@ -31,28 +23,20 @@ public class App {
     JFrame frame = new JFrame("Terraria Sprite Tool");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-    panel.setPreferredSize(new Dimension(800, 600));
-    frame.add(panel);
+    SpriteRenderer renderer = new SpriteRenderer(SpriteData.ARMS_DEALER);
 
-    URL anglerUrl = App.class.getClassLoader().getResource("angler-small.png");
-    BufferedImage anglerImgBuffered = ImageIO.read(anglerUrl);
-    ImageIcon anglerImg = new ImageIcon(anglerImgBuffered.getSubimage(0, 0, 20, 29).getScaledInstance(200, 290, Image.SCALE_FAST));
-    JLabel anglerImgLabel = new JLabel(anglerImg);
-    anglerImgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    panel.add(anglerImgLabel);
-    
-    JLabel indexLabel = new JLabel("0");
-    indexLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    panel.add(indexLabel);
+    renderer.getPanel().setPreferredSize(new Dimension(800, 600));
+    frame.add(renderer.getPanel());
 
     frame.pack();
     frame.setVisible(true);
 
-    SpriteRenderer renderer = new SpriteRenderer(panel, anglerImg, anglerImgBuffered, indexLabel);
+    renderer.updateSprite();
+
     GlobalContent global = new GlobalContent(frame, renderer);
-    SpriteToolListener listener = new SpriteToolListener(global, () -> {App.auto = !auto;});
+    SpriteToolListener listener = new SpriteToolListener(global, () -> {
+      App.auto = !auto;
+    });
     frame.addKeyListener(listener);
 
     while (frame.isDisplayable()) {
@@ -63,5 +47,6 @@ public class App {
     }
   }
 
-  public record GlobalContent(JFrame frame, SpriteRenderer renderer) {};
+  public record GlobalContent(JFrame frame, SpriteRenderer renderer) {
+  };
 }
