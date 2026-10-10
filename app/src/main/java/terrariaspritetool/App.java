@@ -3,10 +3,14 @@
  */
 package terrariaspritetool;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class App {
   public String getGreeting() {
@@ -19,23 +23,21 @@ public class App {
 
   private static void createAndShowGUI() {
     // Create and set up the window.
-    JFrame frame = new JFrame("FrameDemo");
-    frame.setSize(800, 600);
-    System.out.println(String.format("%s %s", frame.getWidth(), frame.getHeight()));
+    JFrame frame = new JFrame("Terraria Sprite Tool");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    JLabel emptyLabel = new JLabel("Test content");
-    // emptyLabel.setPreferredSize(new Dimension(10, 10));
-    frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-    System.out.println("Hmm, default preferred size: " + emptyLabel.getPreferredSize());
-    JLabel emptyLabel2 = new JLabel("Test content 2");
-    // emptyLabel2.setPreferredSize(new Dimension(10, 10));
-    frame.getContentPane().add(emptyLabel2, BorderLayout.PAGE_START);
-    System.out.println("Hmm, default preferred size 2: " + emptyLabel2.getPreferredSize());
+    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    panel.setPreferredSize(new Dimension(800, 667));
+    frame.add(panel);
 
-    // Display the window.
-    // frame.pack();
+    URL anglerUrl = App.class.getClassLoader().getResource("angler-small.png");
+    System.out.println(anglerUrl);
+    panel.add(new JLabel(new ImageIcon(anglerUrl)));
+
+    frame.pack();
     frame.setVisible(true);
+    System.out.println("frame size: " + frame.getSize());
+    System.out.println("panel size: " + panel.getSize());
   }
 
 }
