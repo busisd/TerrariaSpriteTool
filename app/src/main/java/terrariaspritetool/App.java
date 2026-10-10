@@ -27,17 +27,15 @@ public class App {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-    panel.setPreferredSize(new Dimension(800, 667));
+    panel.setPreferredSize(new Dimension(800, 600));
     frame.add(panel);
 
     URL anglerUrl = App.class.getClassLoader().getResource("angler-small.png");
-    System.out.println(anglerUrl);
     panel.add(new JLabel(new ImageIcon(anglerUrl)));
 
     frame.pack();
+    frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
     frame.setVisible(true);
-    System.out.println("frame size: " + frame.getSize());
-    System.out.println("panel size: " + panel.getSize());
   }
 
 }
