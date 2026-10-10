@@ -5,12 +5,16 @@ package terrariaspritetool;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import lombok.SneakyThrows;
 
 public class App {
   public String getGreeting() {
@@ -21,6 +25,7 @@ public class App {
     createAndShowGUI();
   }
 
+  @SneakyThrows
   private static void createAndShowGUI() {
     // Create and set up the window.
     JFrame frame = new JFrame("Terraria Sprite Tool");
@@ -31,11 +36,13 @@ public class App {
     frame.add(panel);
 
     URL anglerUrl = App.class.getClassLoader().getResource("angler-small.png");
-    panel.add(new JLabel(new ImageIcon(anglerUrl)));
+    BufferedImage anglerImgBuffered = ImageIO.read(anglerUrl);
+    ImageIcon anglerImg = new ImageIcon(anglerImgBuffered.getSubimage(0, 0, 20, 29).getScaledInstance(200, 290, Image.SCALE_FAST));
+    panel.add(new JLabel(anglerImg));
 
     frame.pack();
-    frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
     frame.setVisible(true);
-  }
 
+    frame.addKeyListener(new SpriteToolListener(frame, panel));
+  }
 }
