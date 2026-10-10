@@ -24,6 +24,8 @@ public class SpriteToolListener implements KeyListener {
       global.renderer().previousSprite();
     } else if (e.getKeyCode() == KeyEvent.VK_A) {
       toggle.run();
+    } else if (e.getKeyCode() == KeyEvent.VK_W) {
+      global.renderer().setWalkMode(!global.renderer().isWalkMode());
     }
   }
 

@@ -23,7 +23,7 @@ public class App {
     JFrame frame = new JFrame("Terraria Sprite Tool");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    SpriteRenderer renderer = new SpriteRenderer(SpriteData.ARMS_DEALER);
+    SpriteRenderer renderer = new SpriteRenderer(SpriteData.DOG);
 
     renderer.getPanel().setPreferredSize(new Dimension(800, 600));
     frame.add(renderer.getPanel());
@@ -45,6 +45,8 @@ public class App {
         renderer.nextSprite();
       }
     }
+
+    // TODO: dropdowns/inputs for which NPC, different animation sets, which outfit, etc.
   }
 
   public record GlobalContent(JFrame frame, SpriteRenderer renderer) {

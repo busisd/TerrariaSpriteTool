@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import terrariaspritetool.constants.SpriteData;
 
@@ -27,6 +28,9 @@ public class SpriteRenderer {
 
   private int frameIndex = 2;
   private int totalFrames;
+
+  @Getter @Setter 
+  private boolean walkMode = false;
 
   @SneakyThrows
   public SpriteRenderer(SpriteData spriteData) {
@@ -63,7 +67,7 @@ public class SpriteRenderer {
   }
 
   public void updateSprite() {
-    frameIndex = moduloClamp(frameIndex, 2, totalFrames - spriteData.extraFrames());
+    frameIndex = moduloClamp(frameIndex, walkMode ? 2 : 0, walkMode ? totalFrames - spriteData.extraFrames() : totalFrames);
 
     img.setImage(bufferedImg.getSubimage(0, spriteData.h() * frameIndex, spriteData.w(), spriteData.h())
         .getScaledInstance(spriteData.w() * SCALE, spriteData.h() * SCALE, Image.SCALE_FAST));
