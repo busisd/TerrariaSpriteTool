@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.time.Duration;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -47,7 +48,14 @@ public class App {
     frame.pack();
     frame.setVisible(true);
 
-    frame.addKeyListener(new SpriteToolListener(new GlobalContent(frame, new SpriteRenderer(panel, anglerImg, anglerImgBuffered, indexLabel))));
+    SpriteRenderer renderer = new SpriteRenderer(panel, anglerImg, anglerImgBuffered, indexLabel);
+    SpriteToolListener listener = new SpriteToolListener(new GlobalContent(frame, renderer));
+    frame.addKeyListener(listener);
+
+    while (frame.isDisplayable()) {
+      Thread.sleep(Duration.ofMillis(1000 / 10));
+      renderer.nextSprite();
+    }
   }
 
   public record GlobalContent(JFrame frame, SpriteRenderer renderer) {};
