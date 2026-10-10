@@ -3,12 +3,39 @@
  */
 package terrariaspritetool;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import java.awt.BorderLayout;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-    }
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public class App {
+  public String getGreeting() {
+    return "Hello World!";
+  }
+
+  public static void main(String[] args) {
+    createAndShowGUI();
+  }
+
+  private static void createAndShowGUI() {
+    // Create and set up the window.
+    JFrame frame = new JFrame("FrameDemo");
+    frame.setSize(800, 600);
+    System.out.println(String.format("%s %s", frame.getWidth(), frame.getHeight()));
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    JLabel emptyLabel = new JLabel("Test content");
+    // emptyLabel.setPreferredSize(new Dimension(10, 10));
+    frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
+    System.out.println("Hmm, default preferred size: " + emptyLabel.getPreferredSize());
+    JLabel emptyLabel2 = new JLabel("Test content 2");
+    // emptyLabel2.setPreferredSize(new Dimension(10, 10));
+    frame.getContentPane().add(emptyLabel2, BorderLayout.PAGE_START);
+    System.out.println("Hmm, default preferred size 2: " + emptyLabel2.getPreferredSize());
+
+    // Display the window.
+    // frame.pack();
+    frame.setVisible(true);
+  }
+
 }
