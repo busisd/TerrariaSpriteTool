@@ -17,10 +17,6 @@ import javax.swing.JPanel;
 import lombok.SneakyThrows;
 
 public class App {
-  public String getGreeting() {
-    return "Hello World!";
-  }
-
   public static void main(String[] args) {
     createAndShowGUI();
   }
@@ -43,6 +39,8 @@ public class App {
     frame.pack();
     frame.setVisible(true);
 
-    frame.addKeyListener(new SpriteToolListener(frame, panel));
+    frame.addKeyListener(new SpriteToolListener(new GlobalContent(frame, new SpriteRenderer(panel, anglerImg, anglerImgBuffered))));
   }
+
+  public record GlobalContent(JFrame frame, SpriteRenderer renderer) {};
 }

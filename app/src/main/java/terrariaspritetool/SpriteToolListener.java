@@ -1,32 +1,25 @@
 package terrariaspritetool;
 
-import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import terrariaspritetool.App.GlobalContent;
 
 public class SpriteToolListener implements KeyListener {
-  private JFrame frame;
-  private JPanel panel;
+  private GlobalContent global;
 
-  public SpriteToolListener(JFrame frame, JPanel panel) {
-    this.frame = frame;
-    this.panel = panel;
+  public SpriteToolListener(GlobalContent global) {
+    this.global = global;
   }
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_ESCAPE && frame != null) {
-      frame.dispose();
+    if (e.getKeyCode() == KeyEvent.VK_ESCAPE && global.frame() != null) {
+      global.frame().dispose();
     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-      JLabel label = new JLabel("Test content");
-      panel.add(label);
-      panel.revalidate();
-      panel.repaint();
-      System.out.println("!!");
+      global.renderer().nextSprite();
+    } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+      global.renderer().previousSprite();
     }
   }
 
