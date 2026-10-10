@@ -3,13 +3,14 @@
  */
 package terrariaspritetool;
 
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,19 +28,26 @@ public class App {
     JFrame frame = new JFrame("Terraria Sprite Tool");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     panel.setPreferredSize(new Dimension(800, 600));
     frame.add(panel);
 
     URL anglerUrl = App.class.getClassLoader().getResource("angler-small.png");
     BufferedImage anglerImgBuffered = ImageIO.read(anglerUrl);
     ImageIcon anglerImg = new ImageIcon(anglerImgBuffered.getSubimage(0, 0, 20, 29).getScaledInstance(200, 290, Image.SCALE_FAST));
-    panel.add(new JLabel(anglerImg));
+    JLabel anglerImgLabel = new JLabel(anglerImg);
+    anglerImgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    panel.add(anglerImgLabel);
+    
+    JLabel indexLabel = new JLabel("0");
+    indexLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    panel.add(indexLabel);
 
     frame.pack();
     frame.setVisible(true);
 
-    frame.addKeyListener(new SpriteToolListener(new GlobalContent(frame, new SpriteRenderer(panel, anglerImg, anglerImgBuffered))));
+    frame.addKeyListener(new SpriteToolListener(new GlobalContent(frame, new SpriteRenderer(panel, anglerImg, anglerImgBuffered, indexLabel))));
   }
 
   public record GlobalContent(JFrame frame, SpriteRenderer renderer) {};
