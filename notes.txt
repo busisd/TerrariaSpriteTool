@@ -1,5 +1,0 @@
-* https://gist.github.com/Rijam/c67eb86eb3aef9db7ac474ad5ef7dfba#frames
-  * NPC frames guide
-* https://lybell-art.github.io/xnb-js/
-  * XNB to png converter
-

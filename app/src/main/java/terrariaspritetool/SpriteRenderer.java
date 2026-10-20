@@ -4,19 +4,35 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.SneakyThrows;
 import terrariaspritetool.constants.SpriteData;
 
 public class SpriteRenderer {
+  public enum Animation {
+    WALK,
+    JUMP,
+    RAISE_ARM,
+    SIT,
+    TALK,
+    BLINK,
+    ATTACK,
+  }
+
+  private Animation currentAnimation = Animation.RAISE_ARM;
+
   private static final int SCALE = 5;
 
   private SpriteData spriteData;
@@ -26,14 +42,12 @@ public class SpriteRenderer {
   private BufferedImage bufferedImg;
   private JLabel indexLabel;
 
-  private int frameIndex = 2;
+  private int sequenceIndex = 0;
   private int totalFrames;
 
-  @Getter @Setter 
-  private boolean walkMode = false;
+  private Map<Animation, List<Integer>> animationSequences;
 
-  @SneakyThrows
-  public SpriteRenderer(SpriteData spriteData) {
+  public SpriteRenderer(SpriteData spriteData) throws Exception {
     this.spriteData = spriteData;
 
     this.panel = new JPanel();
@@ -54,37 +68,50 @@ public class SpriteRenderer {
     this.indexLabel = indexLabel;
 
     this.totalFrames = bufferedImg.getHeight() / spriteData.h();
+
+    animationSequences = new HashMap<>();
+    animationSequences.put(Animation.WALK, IntStream.range(2, totalFrames - spriteData.extraFrames()).boxed().toList());
+    animationSequences.put(Animation.JUMP, List.of(0, 1));
+    animationSequences.put(Animation.RAISE_ARM,
+        List.of(totalFrames - spriteData.extraFrames(), totalFrames - spriteData.extraFrames() + 1));
+    animationSequences.put(Animation.SIT, List.of(totalFrames - spriteData.extraFrames() + 2));
+    animationSequences.put(Animation.TALK, List.of(0, totalFrames - spriteData.extraFrames() + 3));
+    animationSequences.put(Animation.BLINK, List.of(0, totalFrames - spriteData.extraFrames() + 4));
+    animationSequences.put(Animation.ATTACK,
+        IntStream.range(totalFrames - spriteData.extraFrames() + 5, totalFrames).boxed().toList());
+
+    String[] animationNames = Stream.of(Animation.values()).map(Animation::name).toArray(String[]::new);
+    JComboBox<String> animationChoice = new JComboBox<>(animationNames);
+    animationChoice.setMaximumSize(animationChoice.getPreferredSize());
+    animationChoice.setSelectedIndex(0);
+    animationChoice.addActionListener(e -> {
+      if (animationChoice.getSelectedIndex() != -1) {
+        panel.requestFocusInWindow();
+      }
+    });
+    panel.add(animationChoice);
   }
 
   public void nextSprite() {
-    frameIndex++;
+    sequenceIndex++;
     updateSprite();
   }
 
   public void previousSprite() {
-    frameIndex--;
+    sequenceIndex--;
     updateSprite();
   }
 
   public void updateSprite() {
-    frameIndex = moduloClamp(frameIndex, walkMode ? 2 : 0, walkMode ? totalFrames - spriteData.extraFrames() : totalFrames);
+    List<Integer> currentSequence = animationSequences.get(currentAnimation);
+    sequenceIndex = Math.floorMod(sequenceIndex, currentSequence.size());
+    int frameIndex = currentSequence.get(sequenceIndex);
 
     img.setImage(bufferedImg.getSubimage(0, spriteData.h() * frameIndex, spriteData.w(), spriteData.h())
         .getScaledInstance(spriteData.w() * SCALE, spriteData.h() * SCALE, Image.SCALE_FAST));
-    indexLabel.setText("" + frameIndex);
+    indexLabel.setText(Integer.toString(frameIndex));
+
+    panel.revalidate();
     panel.repaint();
-  }
-
-  private static int moduloClamp(int number, int minIncl, int maxExcl) {
-    if (minIncl >= maxExcl) {
-      throw new IllegalArgumentException(String.format("Min %d must be strictly less than Max %d", minIncl, maxExcl));
-    }
-
-    int range = maxExcl - minIncl;
-    while (number >= maxExcl)
-      number -= range;
-    while (number < minIncl)
-      number += range;
-    return number;
   }
 }

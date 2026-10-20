@@ -4,26 +4,30 @@
 package terrariaspritetool;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.time.Duration;
-
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import lombok.SneakyThrows;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+
 import terrariaspritetool.constants.SpriteData;
 
 public class App {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     createAndShowGUI();
   }
 
   static boolean auto = false;
 
-  @SneakyThrows
-  private static void createAndShowGUI() {
+  private static void createAndShowGUI() throws Exception {
     // Create and set up the window.
     JFrame frame = new JFrame("Terraria Sprite Tool");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    SpriteRenderer renderer = new SpriteRenderer(SpriteData.DOG);
+    SpriteRenderer renderer = new SpriteRenderer(SpriteData.GUIDE);
 
     renderer.getPanel().setPreferredSize(new Dimension(800, 600));
     frame.add(renderer.getPanel());
@@ -34,10 +38,16 @@ public class App {
     renderer.updateSprite();
 
     GlobalContent global = new GlobalContent(frame, renderer);
-    SpriteToolListener listener = new SpriteToolListener(global, () -> {
-      App.auto = !auto;
+
+    addGlobalKeyAction(renderer.getPanel(), KeyEvent.VK_ESCAPE, () -> {
+      if (global.frame() != null) {
+        global.frame().dispose();
+      }
     });
-    frame.addKeyListener(listener);
+    addGlobalKeyAction(renderer.getPanel(), KeyEvent.VK_RIGHT, () -> global.renderer().nextSprite());
+    addGlobalKeyAction(renderer.getPanel(), KeyEvent.VK_LEFT, () -> global.renderer().previousSprite());
+    addGlobalKeyAction(renderer.getPanel(), KeyEvent.VK_A, () -> auto = !auto);
+    System.out.println(renderer.getPanel().getKeyListeners());
 
     while (frame.isDisplayable()) {
       if (auto) {
@@ -46,7 +56,23 @@ public class App {
       }
     }
 
-    // TODO: dropdowns/inputs for which NPC, different animation sets, which outfit, etc.
+    // TODO: dropdowns/inputs for which NPC, different animation sets, which outfit,
+    // etc.
+  }
+
+  private static void addGlobalKeyAction(JPanel panel, int key, Runnable actionCallback) {
+    String name = "Event_" + KeyEvent.getKeyText(key);
+    System.out.println(name);
+    AbstractAction action = new AbstractAction(name) {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        actionCallback.run();
+      }
+    };
+    panel.getActionMap().put(name, action);
+
+    KeyStroke keyStroke = KeyStroke.getKeyStroke(key, 0);
+    panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, name);
   }
 
   public record GlobalContent(JFrame frame, SpriteRenderer renderer) {
