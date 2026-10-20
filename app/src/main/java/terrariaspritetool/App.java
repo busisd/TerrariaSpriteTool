@@ -28,7 +28,7 @@ public class App {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     // TODO: Add ability to select SpriteData at runtime
-    SpriteRenderer renderer = new SpriteRenderer(SpriteData.DOG);
+    SpriteRenderer renderer = new SpriteRenderer(SpriteData.ARMS_DEALER);
 
     renderer.getPanel().setPreferredSize(new Dimension(800, 600));
     frame.add(renderer.getPanel());
@@ -52,6 +52,8 @@ public class App {
 
     while (frame.isDisplayable()) {
       if (auto) {
+        // TODO: Add per-animation timings
+        // TODO: Add "play-once" button for animations?
         Thread.sleep(Duration.ofMillis(1000 / 12));
         renderer.nextSprite();
       }
