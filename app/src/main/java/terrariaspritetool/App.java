@@ -20,14 +20,15 @@ public class App {
     createAndShowGUI();
   }
 
-  static boolean auto = false;
+  static boolean auto = true;
 
   private static void createAndShowGUI() throws Exception {
     // Create and set up the window.
     JFrame frame = new JFrame("Terraria Sprite Tool");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    SpriteRenderer renderer = new SpriteRenderer(SpriteData.GUIDE);
+    // TODO: Add ability to select SpriteData at runtime
+    SpriteRenderer renderer = new SpriteRenderer(SpriteData.DOG);
 
     renderer.getPanel().setPreferredSize(new Dimension(800, 600));
     frame.add(renderer.getPanel());
@@ -62,7 +63,6 @@ public class App {
 
   private static void addGlobalKeyAction(JPanel panel, int key, Runnable actionCallback) {
     String name = "Event_" + KeyEvent.getKeyText(key);
-    System.out.println(name);
     AbstractAction action = new AbstractAction(name) {
       @Override
       public void actionPerformed(ActionEvent e) {

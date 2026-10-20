@@ -31,7 +31,7 @@ public class SpriteRenderer {
     ATTACK,
   }
 
-  private Animation currentAnimation = Animation.RAISE_ARM;
+  private Animation currentAnimation = Animation.WALK;
 
   private static final int SCALE = 5;
 
@@ -69,6 +69,8 @@ public class SpriteRenderer {
 
     this.totalFrames = bufferedImg.getHeight() / spriteData.h();
 
+    // TODO: Pet animation sequences are different, add flag and custom sequences
+    // for pets
     animationSequences = new HashMap<>();
     animationSequences.put(Animation.WALK, IntStream.range(2, totalFrames - spriteData.extraFrames()).boxed().toList());
     animationSequences.put(Animation.JUMP, List.of(0, 1));
@@ -85,10 +87,10 @@ public class SpriteRenderer {
     animationChoice.setMaximumSize(animationChoice.getPreferredSize());
     animationChoice.setSelectedIndex(0);
     animationChoice.addActionListener(e -> {
-      if (animationChoice.getSelectedIndex() != -1) {
-        panel.requestFocusInWindow();
-      }
+      currentAnimation = Animation.valueOf((String) animationChoice.getSelectedItem());
+      updateSprite();
     });
+    animationChoice.setFocusable(false);
     panel.add(animationChoice);
   }
 
